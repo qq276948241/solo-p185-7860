@@ -31,3 +31,4 @@ class Booking(Base):
     user = relationship("User", back_populates="bookings")
     course = relationship("Course", back_populates="bookings")
     check_in = relationship("CheckIn", back_populates="booking", uselist=False)
+    review = relationship("Review", back_populates="booking", uselist=False)

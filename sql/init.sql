@@ -99,3 +99,23 @@ CREATE TABLE IF NOT EXISTS check_ins (
   FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS reviews (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  booking_id INT NOT NULL UNIQUE,
+  user_id INT NOT NULL,
+  course_id INT NOT NULL,
+  coach_id INT NOT NULL,
+  rating TINYINT NOT NULL COMMENT '1-5星',
+  comment TEXT,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uix_booking_review (booking_id),
+  INDEX idx_user_id (user_id),
+  INDEX idx_coach_id (coach_id),
+  INDEX idx_course_id (course_id),
+  INDEX idx_rating (rating),
+  FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+  FOREIGN KEY (coach_id) REFERENCES coaches(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

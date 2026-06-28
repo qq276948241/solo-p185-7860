@@ -25,6 +25,7 @@ from app.schemas.admin import (
     CoachStats,
     ExpiringCardResponse,
 )
+from app.schemas.review import ReviewCreate, ReviewResponse, ReviewStats
 
 __all__ = [
     "UserCreate",
@@ -51,4 +52,7 @@ __all__ = [
     "CourseBookingStats",
     "CoachStats",
     "ExpiringCardResponse",
+    "ReviewCreate",
+    "ReviewResponse",
+    "ReviewStats",
 ]
