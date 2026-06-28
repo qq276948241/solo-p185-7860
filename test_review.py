@@ -55,9 +55,13 @@ def setup_test_data():
     from app.models.course import Course
     from app.models.user import User
     from app.models.membership_card import MembershipCard, CardType, CardStatus
+    from app.models.review import Review
 
     db = SessionLocal()
     try:
+        db.query(Review).delete()
+        db.commit()
+
         member = db.query(User).filter(User.phone == "13810000001").first()
         if not member:
             print("  ✗ 测试会员不存在，请先运行 seed_data.py")

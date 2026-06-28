@@ -12,9 +12,9 @@ from app.models.coach import Coach
 from app.models.booking import Booking, BookingStatus
 from app.models.check_in import CheckIn
 from app.models.membership_card import MembershipCard, CardStatus
-from app.models.review import Review
 from app.schemas.admin import CourseBookingStats, CoachStats, ExpiringCardResponse
 from app.schemas.review import ReviewResponse
+from app.services import review_service
 
 router = APIRouter(prefix="/admin", tags=["管理员"])
 
@@ -218,28 +218,4 @@ def get_all_reviews(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin),
 ):
-    query = db.query(Review)
-
-    if coach_id:
-        query = query.filter(Review.coach_id == coach_id)
-    if rating:
-        query = query.filter(Review.rating == rating)
-
-    reviews = query.order_by(Review.created_at.desc()).all()
-
-    result = []
-    for r in reviews:
-        course = db.query(Course).filter(Course.id == r.course_id).first()
-        coach = db.query(Coach).filter(Coach.id == r.coach_id).first()
-        user = db.query(User).filter(User.id == r.user_id).first()
-        booking = db.query(Booking).filter(Booking.id == r.booking_id).first()
-
-        r_resp = ReviewResponse.model_validate(r)
-        r_resp.user_name = user.name if user else None
-        r_resp.course_name = course.name
-        r_resp.coach_name = coach.name if coach else None
-        r_resp.class_date = booking.class_date.isoformat() if booking else None
-        r_resp.start_time = course.start_time.strftime("%H:%M")
-        result.append(r_resp)
-
-    return result
+    return review_service.get_review_responses(db, coach_id=coach_id, rating=rating)
